@@ -2,28 +2,35 @@ import { Pressable, StyleSheet, Text, View } from "react-native";
 
 const Item = ({ item, deleteItem }) => {
   const onDelete = () => {
-    deleteItem(item.key);
+    deleteItem({ ...item, status: !item.status });
   };
 
   return (
-    <Pressable onPress={onDelete}>
-      <View style={styles.listItem}>
-        <Text style={styles.listItemText}>{item.label}</Text>
-      </View>
-    </Pressable>
+    <View style={styles.listItem}>
+      <Pressable onPress={onDelete}>
+        <Text style={[styles.listItemText, item.status && styles.listItemDone]}>
+          {item.label}
+        </Text>
+      </Pressable>
+    </View>
   );
 };
 
 const styles = StyleSheet.create({
   listItem: {
-    padding: 12,
     fontSize: 18,
-    marginBottom: 8,
-    backgroundColor: "#111",
+    marginBottom: 10,
+    backgroundColor: "#222",
     borderRadius: 4,
   },
   listItemText: {
-    color: "#ccc",
+    paddingVertical: 16,
+    paddingHorizontal: 12,
+    color: "whitesmoke",
+  },
+  listItemDone: {
+    textDecorationLine: "line-through",
+    color: "#7A7777",
   },
 });
 

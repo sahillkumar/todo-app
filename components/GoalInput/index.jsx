@@ -1,51 +1,86 @@
 import React, { useState } from "react";
-import { Button, StyleSheet, TextInput, View } from "react-native";
+import {
+  Alert,
+  Button,
+  Modal,
+  StyleSheet,
+  TextInput,
+  View,
+} from "react-native";
+import Header from "../Header";
 
-const GoalInput = ({ addGoal }) => {
+const GoalInput = ({ addGoal, showModal, toggleVisibility }) => {
   const [goalTerm, setGoalTerm] = useState("");
   const onChange = (value) => {
     setGoalTerm(value);
   };
 
   const addGoalHandler = () => {
+    if (!goalTerm?.trim().length) {
+      Alert.alert("Error", "Goal name cannot be empty");
+      return;
+    }
     addGoal(goalTerm);
+    onCancel();
+  };
+
+  const onCancel = () => {
     setGoalTerm("");
+    toggleVisibility();
   };
 
   return (
-    <View style={styles.form}>
-      <View style={styles.inputWrapper}>
-        <TextInput
-          value={goalTerm}
-          style={styles.inputText}
-          onChangeText={onChange}
-          placeholder="Enter Goal..."
-          placeholderTextColor={"#ccc"}
-        />
+    <Modal
+      visible={showModal}
+      animationType="slide"
+      transparent
+      statusBarTranslucent
+    >
+      <Header title="Add Goal" />
+      <View style={styles.form}>
+        <View style={styles.inputWrapper}>
+          <TextInput
+            value={goalTerm}
+            style={styles.inputBox}
+            onChangeText={onChange}
+            placeholder="Enter Task"
+            placeholderTextColor={"whitesmoke"}
+          />
+        </View>
+        <View style={styles.buttonWrapper}>
+          <View style={styles.button}>
+            <Button title="Cancel" onPress={onCancel} color="transparent" />
+          </View>
+          <View style={styles.button}>
+            <Button title="+ Add" onPress={addGoalHandler} color="#0AB6AB" />
+          </View>
+        </View>
       </View>
-      <Button title="Add Goal" onPress={addGoalHandler} />
-    </View>
+    </Modal>
   );
 };
 
 const styles = StyleSheet.create({
   form: {
-    marginTop: 40,
-    gap: 16,
-    flexDirection: "row",
-    borderBottomWidth: 1,
-    borderBottomColor: "#ccc",
-    paddingVertical: 24,
-  },
-  inputWrapper: {
+    backgroundColor: "#151515",
     flex: 1,
+    paddingVertical: 24,
+    paddingHorizontal: 16,
+    gap: 32,
   },
-  inputText: {
+  inputWrapper: {},
+  inputBox: {
+    borderBottomWidth: 1,
+    borderBottomColor: "grey",
     padding: 8,
-    color: "#ccc",
-    fontSize: 16,
-    borderWidth: 1,
-    borderColor: "#ccc",
+    color: "whitesmoke",
+  },
+  buttonWrapper: {
+    flexDirection: "row",
+    gap: 32,
+  },
+  button: {
+    flex: 1,
   },
 });
 
